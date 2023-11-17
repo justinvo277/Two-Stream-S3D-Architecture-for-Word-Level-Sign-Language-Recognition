@@ -18,7 +18,7 @@ parser.add_argument("--image_size", type=int, help="Enter image size of frame", 
 
 parser.add_argument("--num_classes", type=int, help="Enter number of classification", default=226)
 parser.add_argument("--num_epochs", type=int, help="Enter number of epoch for training", default=20)
-parser.add_argument("--batch_size", type=int, help="Enter batch size of a iteration", default=20)
+parser.add_argument("--batch_size", type=int, help="Enter batch size of a iteration", default=8)
 parser.add_argument("--lr", type=float, help="Enter learning rate for trainning", default=1e-3)
 parser.add_argument("--max_viz", type=int, help="Enter max_viz for validation phase", default=2)
 
@@ -41,18 +41,14 @@ if __name__ == "__main__":
     
     test_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=args.root_path, num_frames=args.num_frames, 
                                                            data_name=args.data_name, split="test", image_size=args.image_size), 
-                                                           batch_size=args.batch_size, shuffle=True, num_workers=4)
+                                                           batch_size=4, shuffle=True, num_workers=4)
     
-    # val_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=args.root_path, num_frames=args.num_frames, 
-    #                                                       data_name=args.data_name, split="val", image_size=args.image_size), 
-    #                                                       batch_size=args.batch_size, shuffle=True, num_workers=4)
     
     print(f"Train on device: {DEVICE}")
     print("\n")
     print(f"Train on dataset: {args.data_name} dataset")
     print(f"Samples in train datase: {len(train_loader) * args.batch_size}")
-    print(f"Samples in test datase: {len(test_loader) * args.batch_size}")
-    # print(f"Samples in val datase: {len(val_loader) * args.batch_size}")
+    print(f"Samples in test datase: {len(test_loader) * 4}")
     print("\n")
 
     save_path = args.model_save
