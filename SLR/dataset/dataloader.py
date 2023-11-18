@@ -195,6 +195,10 @@ class VideoDataSet(torch.utils.data.Dataset):
 
         frames, posese = self.putitem(frame_path, pose_path)
 
+        # if self.split == "train":
+        #     print("yeah")
+        #     pass
+
         return frames, posese, label
     
     
@@ -203,39 +207,59 @@ class VideoDataSet(torch.utils.data.Dataset):
         frames = torch.empty(self.num_frames, 3, self.image_size, self.image_size)
         posese = torch.empty(self.num_frames, 3, self.image_size, self.image_size)
 
-        frames_lst = os.listdir(frame_path)
-        posese_lst = os.listdir(pose_path)
+        frames_lst = sorted(os.listdir(frame_path), key=extract_frame_number)
+        poses_lst = sorted(os.listdir(pose_path), key=extract_frame_number)
 
-        for idx in range(self.num_frames):
+        count = 0
+        for idx_frame in frames_lst:
 
-            frame_path_tmp = os.path.join(frame_path, frames_lst[idx])
+            frame_path_tmp = os.path.join(frame_path, idx_frame)
             frame = cv.imread(frame_path_tmp)
             frame = cv.resize(frame, (self.image_size, self.image_size))
             frame = torch.tensor(frame, dtype=torch.float32) / 255.0
             frame = frame.permute(2, 0, 1)
-            frames[idx] = frame
+            frames[count] = frame
+            count += 1
 
-            pose_path_tmp = os.path.join(pose_path, posese_lst[idx])
+        count = 0
+        for idx_pose in poses_lst:
+            pose_path_tmp = os.path.join(pose_path, idx_pose)
             pose = cv.imread(pose_path_tmp)
             pose = cv.resize(pose, (self.image_size, self.image_size))
             pose = torch.tensor(pose, dtype=torch.float32) / 255.0
             pose = pose.permute(2, 0, 1)
-            posese[idx] = pose
+            posese[count] = pose
+            count += 1
 
         frames = frames.permute(1, 0, 2, 3)
         posese = posese.permute(1, 0, 2, 3)
         
         return frames, posese
 
+def extract_frame_number(file_name):
+    try:
+        return int(file_name.split('_')[1].split('.')[0])
+    except (IndexError, ValueError):
+        return float('inf')
+    
+
+# def test(tensor_frames, path):
+
+#     tensor_frames = tensor_frames.permute(1, 2, 3, 0)
+#     for idx_frame in range(tensor_frames.size()[0]):
+#         image = tensor_frames[idx_frame].numpy()
+#         image = (image * 255).astype(np.uint8)
+#         name = "image" + str(idx_frame) + ".png"
+#         image_name = os.path.join(path, name)
+#         cv.imwrite(image_name, image)
+    
+#     print("Done")
 
 # if __name__ == "__main__":
-#     print("0")
 #     train_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, 
 #                                                             data_name="WLASL100", split="train", image_size=224), 
-#                                                             batch_size=4, shuffle=True, num_workers=4)
-#     print("a")
-#     print(len(train_loader))
+#                                                             batch_size=1, shuffle=True, num_workers=4)
 #     a, b, c = next(iter(train_loader))
-#     print(a.size())
-#     print(b.size())
-#     print(c)
+#     print(c[0])
+#     test(a[0], r"E:\rgb")
+#     test(b[0], r"E:\pose")
