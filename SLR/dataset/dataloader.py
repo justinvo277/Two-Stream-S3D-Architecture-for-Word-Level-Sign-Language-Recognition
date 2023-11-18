@@ -3,7 +3,9 @@ import torch
 import argparse
 import cv2 as cv
 import numpy as np
+import torchvision
 import mediapipe as mp
+from torchvision import transforms
 from torch.utils.data import Dataset
 from sklearn.model_selection import StratifiedShuffleSplit
 
@@ -193,19 +195,45 @@ class VideoDataSet(torch.utils.data.Dataset):
         pose_path = self.poses_folder[index]
         label = self.labels[index]
 
-        frames, posese = self.putitem(frame_path, pose_path)
+        frames, poses = self.putitem(frame_path, pose_path)
 
-        # if self.split == "train":
-        #     print("yeah")
-        #     pass
+        if self.split == "train":
 
-        return frames, posese, label
+            transform = None
+
+            if np.random.randint(2) == 1:
+                angle = int(np.random.uniform(0, 45))
+
+                transform = transforms.Compose([
+                    transforms.ToPILImage(),
+                    transforms.RandomRotation(degrees=(angle, angle)),
+                    transforms.CenterCrop((190, 190)),
+                    transforms.Resize((224, 224)),
+                    transforms.ToTensor(),
+                    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
+            else:
+                transform = transforms.Compose([
+                    transforms.ToPILImage(),
+                    transforms.ToTensor(),
+                    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
+
+            frames = frames.permute(0, 3, 1, 2)
+            for i in range(frames.size(0)):
+                frames[i] = transform(frames[i])
+            frames = frames.permute(1, 0, 2, 3)
+
+            poses = poses.permute(0, 3, 1, 2)
+            for i in range(poses.size(0)):
+                poses[i] = transform(poses[i])
+            poses = poses.permute(1, 0, 2, 3) 
+
+        return frames, poses, label
     
     
     def putitem(self, frame_path: str, pose_path) -> torch.tensor:
         
-        frames = torch.empty(self.num_frames, 3, self.image_size, self.image_size)
-        posese = torch.empty(self.num_frames, 3, self.image_size, self.image_size)
+        frames = torch.empty(self.num_frames, self.image_size, self.image_size, 3)
+        posese = torch.empty(self.num_frames, self.image_size, self.image_size, 3)
 
         frames_lst = sorted(os.listdir(frame_path), key=extract_frame_number)
         poses_lst = sorted(os.listdir(pose_path), key=extract_frame_number)
@@ -217,7 +245,6 @@ class VideoDataSet(torch.utils.data.Dataset):
             frame = cv.imread(frame_path_tmp)
             frame = cv.resize(frame, (self.image_size, self.image_size))
             frame = torch.tensor(frame, dtype=torch.float32) / 255.0
-            frame = frame.permute(2, 0, 1)
             frames[count] = frame
             count += 1
 
@@ -227,12 +254,8 @@ class VideoDataSet(torch.utils.data.Dataset):
             pose = cv.imread(pose_path_tmp)
             pose = cv.resize(pose, (self.image_size, self.image_size))
             pose = torch.tensor(pose, dtype=torch.float32) / 255.0
-            pose = pose.permute(2, 0, 1)
             posese[count] = pose
             count += 1
-
-        frames = frames.permute(1, 0, 2, 3)
-        posese = posese.permute(1, 0, 2, 3)
         
         return frames, posese
 
@@ -243,17 +266,17 @@ def extract_frame_number(file_name):
         return float('inf')
     
 
-# def test(tensor_frames, path):
+def test(tensor_frames, path):
 
-#     tensor_frames = tensor_frames.permute(1, 2, 3, 0)
-#     for idx_frame in range(tensor_frames.size()[0]):
-#         image = tensor_frames[idx_frame].numpy()
-#         image = (image * 255).astype(np.uint8)
-#         name = "image" + str(idx_frame) + ".png"
-#         image_name = os.path.join(path, name)
-#         cv.imwrite(image_name, image)
+    tensor_frames = tensor_frames.permute(1, 2, 3, 0)
+    for idx_frame in range(tensor_frames.size()[0]):
+        image = tensor_frames[idx_frame].numpy()
+        image = (image * 255).astype(np.uint8)
+        name = "image" + str(idx_frame) + ".png"
+        image_name = os.path.join(path, name)
+        cv.imwrite(image_name, image)
     
-#     print("Done")
+    print("Done")
 
 # if __name__ == "__main__":
 #     train_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, 
