@@ -80,10 +80,10 @@ if __name__ == "__main__":
 
     for epoch in range(1, args.num_epochs + 1):
 
-        print(f"EPOCH [{epoch}/{args.num_epochs}]: ")
-        print("Trainning Phase")
-        epoch_train_loss, epoch__train_acc = trainning_phase(model, train_loader, optimizer, scheduler, criterion, DEVICE)
-        print(f"Epoch Loss Train: {round(epoch_train_loss, 4)} - Epochs Accuracy Train: {round(epoch__train_acc, 4)}")
+        # print(f"EPOCH [{epoch}/{args.num_epochs}]: ")
+        # print("Trainning Phase")
+        # epoch_train_loss, epoch__train_acc = trainning_phase(model, train_loader, optimizer, scheduler, criterion, DEVICE)
+        # print(f"Epoch Loss Train: {round(epoch_train_loss, 4)} - Epochs Accuracy Train: {round(epoch__train_acc, 4)}")
 
         if epoch % args.max_viz == 0:
 

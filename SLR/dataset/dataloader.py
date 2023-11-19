@@ -197,9 +197,12 @@ class VideoDataSet(torch.utils.data.Dataset):
 
         frames, poses = self.putitem(frame_path, pose_path)
 
-        if self.split == "train":
+        transform = transforms.Compose([
+                transforms.ToPILImage(),
+                transforms.ToTensor(),
+                transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
-            transform = None
+        if self.split == "train":
 
             if np.random.randint(2) == 1:
                 angle = int(np.random.uniform(0, 45))
@@ -211,21 +214,16 @@ class VideoDataSet(torch.utils.data.Dataset):
                     transforms.Resize((224, 224)),
                     transforms.ToTensor(),
                     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
-            else:
-                transform = transforms.Compose([
-                    transforms.ToPILImage(),
-                    transforms.ToTensor(),
-                    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
-            frames = frames.permute(0, 3, 1, 2)
-            for i in range(frames.size(0)):
-                frames[i] = transform(frames[i])
-            frames = frames.permute(1, 0, 2, 3)
+        frames = frames.permute(0, 3, 1, 2)
+        for i in range(frames.size(0)):
+            frames[i] = transform(frames[i])
+        frames = frames.permute(1, 0, 2, 3)
 
-            poses = poses.permute(0, 3, 1, 2)
-            for i in range(poses.size(0)):
-                poses[i] = transform(poses[i])
-            poses = poses.permute(1, 0, 2, 3) 
+        poses = poses.permute(0, 3, 1, 2)
+        for i in range(poses.size(0)):
+            poses[i] = transform(poses[i])
+        poses = poses.permute(1, 0, 2, 3) 
 
         return frames, poses, label
     
@@ -264,3 +262,23 @@ def extract_frame_number(file_name):
         return int(file_name.split('_')[1].split('.')[0])
     except (IndexError, ValueError):
         return float('inf')
+    
+
+# def test(tensor_frames, path):
+
+#     tensor_frames = tensor_frames.permute(1, 2, 3, 0)
+#     for idx_frame in range(tensor_frames.size()[0]):
+#         image = tensor_frames[idx_frame].numpy()
+#         image = (image * 255).astype(np.uint8)
+#         name = "image" + str(idx_frame) + ".png"
+#         image_name = os.path.join(path, name)
+#         cv.imwrite(image_name, image)
+    
+#     print("Done")
+
+# if __name__ == "__main__":
+#     train_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, 
+#                                                             data_name="WLASL100", split="train", image_size=224), 
+#                                                             batch_size=1, shuffle=True, num_workers=4)
+#     a, b, c = next(iter(train_loader))
+#     print(c)
