@@ -52,13 +52,11 @@ if __name__ == "__main__":
     print("\n")
 
     save_path = args.model_save
-    model = TwoStreamS3D(num_classes=226)
+    model = TwoStreamS3D(num_classes=args.num_classes)
     if args.pretrained != None:
         print("Load Pretrain Weight !!")
         print("\n")
         model.load_state_dict(torch.load(args.pretrained))
-    if args.num_classes != 226:
-        model.classifier[1] = torch.nn.Conv3d(1024, args.num_classes, kernel_size=(1, 1, 1), stride=(1, 1, 1))
     
     print("Model Detail")
     total_parameters = count_parameters(model)

@@ -264,21 +264,3 @@ def extract_frame_number(file_name):
         return float('inf')
     
 
-# def test(tensor_frames, path):
-
-#     tensor_frames = tensor_frames.permute(1, 2, 3, 0)
-#     for idx_frame in range(tensor_frames.size()[0]):
-#         image = tensor_frames[idx_frame].numpy()
-#         image = (image * 255).astype(np.uint8)
-#         name = "image" + str(idx_frame) + ".png"
-#         image_name = os.path.join(path, name)
-#         cv.imwrite(image_name, image)
-    
-#     print("Done")
-
-# if __name__ == "__main__":
-#     train_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, 
-#                                                             data_name="WLASL100", split="train", image_size=224), 
-#                                                             batch_size=1, shuffle=True, num_workers=4)
-#     a, b, c = next(iter(train_loader))
-#     print(c)
