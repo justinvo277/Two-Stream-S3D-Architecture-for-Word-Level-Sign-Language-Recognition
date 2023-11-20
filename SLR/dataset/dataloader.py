@@ -205,16 +205,20 @@ class VideoDataSet(torch.utils.data.Dataset):
         if self.split == "train":
 
             if np.random.randint(2) == 1:
-                angle = int(np.random.uniform(0, 45))
+
+                angle = round(np.random.uniform(0, 45), 4)
+                translate = round(np.random.uniform(-10, 10), 4)
+                scale = round(np.random.uniform(0.8, 1.2), 4)
 
                 transform = transforms.Compose([
                     transforms.ToPILImage(),
-                    transforms.RandomRotation(degrees=(angle, angle)),
+                    transforms.RandomAffine(egrees=(angle, angle), translate=(translate, translate), scale=(scale, scale)),
+                    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
                     transforms.CenterCrop((190, 190)),
                     transforms.Resize((224, 224)),
                     transforms.ToTensor(),
                     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
-
+                
         frames = frames.permute(0, 3, 1, 2)
         for i in range(frames.size(0)):
             frames[i] = transform(frames[i])
@@ -264,3 +268,22 @@ def extract_frame_number(file_name):
         return float('inf')
     
 
+# def test(tensor_frames, path):
+#     tensor_frames = tensor_frames.permute(1, 2, 3, 0)
+#     for idx_frame in range(tensor_frames.size()[0]):
+#         image = tensor_frames[idx_frame].numpy()
+#         image = (image * 255).astype(np.uint8)
+#         name = "image" + str(idx_frame) + ".png"
+#         image_name = os.path.join(path, name)
+#         cv.imwrite(image_name, image)
+
+# if __name__ == "__main__":
+
+#     for i in range(100):
+#         train_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, 
+#                                                             data_name="WLASL100", split="train", image_size=224), 
+#                                                             batch_size=1, shuffle=True, num_workers=4)
+#         a, b, c = next(iter(train_loader))
+#         test(a[0], r"E:\RGB")
+#         test(b[0], r"E:\Pose")
+#         print("Done")
