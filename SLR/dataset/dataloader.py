@@ -207,10 +207,10 @@ class VideoDataSet(torch.utils.data.Dataset):
             if np.random.randint(2) == 1:
                             
                 angle = int(np.random.uniform(0, 30))
-                brightness_factor = np.random.uniform(0.8, 1.2)
-                contrast_factor = np.random.uniform(0.8, 1.2)
-                saturation_factor = np.random.uniform(0.8, 1.2)
-                hue_factor = np.random.uniform(-0.2, 0.2)
+                brightness_factor = np.random.uniform(0, 0.5)
+                contrast_factor = np.random.uniform(0, 0.5)
+                saturation_factor = np.random.uniform(0, 0.5)
+                hue_factor = np.random.uniform(0, 0.5)
 
                 transform = transforms.Compose([
                     transforms.ToPILImage(),
@@ -277,3 +277,21 @@ def extract_frame_number(file_name):
     except (IndexError, ValueError):
         return float('inf')
     
+
+def test(tensor_frames, path):
+    tensor_frames = tensor_frames.permute(1, 2, 3, 0)
+    for idx_frame in range(tensor_frames.size()[0]):
+        image = tensor_frames[idx_frame].numpy()
+        image = (image * 255).astype(np.uint8)
+        name = "image" + str(idx_frame) + ".png"
+        image_name = os.path.join(path, name)
+        cv.imwrite(image_name, image)
+
+if __name__ == "__main__":
+
+    data = VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, data_name="WLASL100", split="train", image_size=224)
+    train_loader = torch.utils.data.DataLoader(data, batch_size=2, shuffle=True, num_workers=4)
+    a, b, c = next(iter(train_loader))
+    test(a[0], r"E:\rgb")
+    test(b[0], r"E:\pose")
+    print(c)
