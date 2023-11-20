@@ -205,14 +205,12 @@ class VideoDataSet(torch.utils.data.Dataset):
         if self.split == "train":
 
             if np.random.randint(2) == 1:
-
-                angle = round(np.random.uniform(0, 45), 4)
-                translate = round(np.random.uniform(-10, 10), 4)
-                scale = round(np.random.uniform(0.8, 1.2), 4)
+                            
+                angle = int(np.random.uniform(0, 45))
 
                 transform = transforms.Compose([
                     transforms.ToPILImage(),
-                    transforms.RandomAffine(egrees=(angle, angle), translate=(translate, translate), scale=(scale, scale)),
+                    transforms.RandomRotation(degrees=(angle, angle)),
                     transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
                     transforms.CenterCrop((190, 190)),
                     transforms.Resize((224, 224)),
