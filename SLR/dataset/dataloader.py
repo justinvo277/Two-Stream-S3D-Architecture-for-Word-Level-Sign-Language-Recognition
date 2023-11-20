@@ -136,7 +136,7 @@ class VideoDataSet(torch.utils.data.Dataset):
 
             count_frame = 0
             num_count_frame = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
-            selected_frames = [int(i * (num_count_frame - 1) / (self.num_frames - 1)) for i in range(self.num_frames)]
+            selected_frames = [i for i in range(num_count_frame)]
 
             for frame_index in selected_frames:
 
@@ -206,12 +206,16 @@ class VideoDataSet(torch.utils.data.Dataset):
 
             if np.random.randint(2) == 1:
                             
-                angle = int(np.random.uniform(0, 45))
+                angle = int(np.random.uniform(0, 30))
+                brightness_factor = np.random.uniform(0.8, 1.2)
+                contrast_factor = np.random.uniform(0.8, 1.2)
+                saturation_factor = np.random.uniform(0.8, 1.2)
+                hue_factor = np.random.uniform(-0.2, 0.2)
 
                 transform = transforms.Compose([
                     transforms.ToPILImage(),
                     transforms.RandomRotation(degrees=(angle, angle)),
-                    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
+                    transforms.ColorJitter(brightness=brightness_factor, contrast=contrast_factor, saturation=saturation_factor, hue=hue_factor),
                     transforms.CenterCrop((190, 190)),
                     transforms.Resize((224, 224)),
                     transforms.ToTensor(),
@@ -231,33 +235,41 @@ class VideoDataSet(torch.utils.data.Dataset):
     
     
     def putitem(self, frame_path: str, pose_path) -> torch.tensor:
-        
+
         frames = torch.empty(self.num_frames, self.image_size, self.image_size, 3)
-        posese = torch.empty(self.num_frames, self.image_size, self.image_size, 3)
+        poses = torch.empty(self.num_frames, self.image_size, self.image_size, 3)
 
         frames_lst = sorted(os.listdir(frame_path), key=extract_frame_number)
         poses_lst = sorted(os.listdir(pose_path), key=extract_frame_number)
 
-        count = 0
-        for idx_frame in frames_lst:
+        step = len(frames_lst) // self.num_frames
+        pose_idx_list = []
 
-            frame_path_tmp = os.path.join(frame_path, idx_frame)
+        for idx in range(self.num_frames):
+
+            #random index;
+            start = idx * step
+            end = min(step * (idx + 1), len(frames_lst))
+            frame_idx = np.random.randint(start , end)
+            pose_idx_list.append(frame_idx)
+
+            #load image;
+            frame_path_tmp = os.path.join(frame_path, frames_lst[frame_idx])
             frame = cv.imread(frame_path_tmp)
             frame = cv.resize(frame, (self.image_size, self.image_size))
             frame = torch.tensor(frame, dtype=torch.float32) / 255.0
-            frames[count] = frame
-            count += 1
+            frames[idx] = frame
 
-        count = 0
-        for idx_pose in poses_lst:
-            pose_path_tmp = os.path.join(pose_path, idx_pose)
+        for idx in range(self.num_frames):
+
+            #load image;
+            pose_path_tmp = os.path.join(pose_path, poses_lst[pose_idx_list[idx]])
             pose = cv.imread(pose_path_tmp)
             pose = cv.resize(pose, (self.image_size, self.image_size))
             pose = torch.tensor(pose, dtype=torch.float32) / 255.0
-            posese[count] = pose
-            count += 1
+            poses[idx] = pose
         
-        return frames, posese
+        return frames, poses
 
 def extract_frame_number(file_name):
     try:
@@ -265,23 +277,3 @@ def extract_frame_number(file_name):
     except (IndexError, ValueError):
         return float('inf')
     
-
-# def test(tensor_frames, path):
-#     tensor_frames = tensor_frames.permute(1, 2, 3, 0)
-#     for idx_frame in range(tensor_frames.size()[0]):
-#         image = tensor_frames[idx_frame].numpy()
-#         image = (image * 255).astype(np.uint8)
-#         name = "image" + str(idx_frame) + ".png"
-#         image_name = os.path.join(path, name)
-#         cv.imwrite(image_name, image)
-
-# if __name__ == "__main__":
-
-#     for i in range(100):
-#         train_loader = torch.utils.data.DataLoader(VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, 
-#                                                             data_name="WLASL100", split="train", image_size=224), 
-#                                                             batch_size=1, shuffle=True, num_workers=4)
-#         a, b, c = next(iter(train_loader))
-#         test(a[0], r"E:\RGB")
-#         test(b[0], r"E:\Pose")
-#         print("Done")

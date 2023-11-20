@@ -3,7 +3,7 @@ from torchvision.models.video import S3D_Weights, s3d
 
 class TwoStreamS3D(torch.nn.Module):
 
-    def __init__(self, num_classes: int=400, dropout: float=0.2):
+    def __init__(self, num_classes: int=400, dropout: float=0.3):
         super(TwoStreamS3D, self).__init__()
 
         self.spatial_stream = s3d(weights=S3D_Weights.KINETICS400_V1, num_classes=400, dropout=dropout)
