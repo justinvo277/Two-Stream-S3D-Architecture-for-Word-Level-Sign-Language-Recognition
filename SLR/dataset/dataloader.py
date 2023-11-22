@@ -207,15 +207,15 @@ class VideoDataSet(torch.utils.data.Dataset):
             if np.random.randint(2) == 1:
                             
                 angle = int(np.random.uniform(0, 30))
-                # brightness_factor = np.random.uniform(0, 0.5)
-                # contrast_factor = np.random.uniform(0, 0.5)
-                # saturation_factor = np.random.uniform(0, 0.5)
-                # hue_factor = np.random.uniform(0, 0.5)
+                brightness_factor = np.random.uniform(0, 0.5)
+                contrast_factor = np.random.uniform(0, 0.5)
+                saturation_factor = np.random.uniform(0, 0.5)
+                hue_factor = np.random.uniform(0, 0.5)
 
                 transform = transforms.Compose([
                     transforms.ToPILImage(),
                     transforms.RandomRotation(degrees=(angle, angle)),
-                    # transforms.ColorJitter(brightness=brightness_factor, contrast=contrast_factor, saturation=saturation_factor, hue=hue_factor),
+                    transforms.ColorJitter(brightness=brightness_factor, contrast=contrast_factor, saturation=saturation_factor, hue=hue_factor),
                     transforms.CenterCrop((190, 190)),
                     transforms.Resize((224, 224)),
                     transforms.ToTensor(),
