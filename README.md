@@ -7,4 +7,4 @@ This repository accompanies the paper [Two Stream S3D Architecture for Word Leve
 
 ## Two Stream S3D Architecture
 
-![Two Stream S3D Architecture](https://data.matsworld.io/signlanguagerecognition/GitHub_banner.png)
+![Two Stream S3D Architecture]()
