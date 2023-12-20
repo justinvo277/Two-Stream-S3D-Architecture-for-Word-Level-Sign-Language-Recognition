@@ -69,7 +69,7 @@ Root Folder
 ```
 We will need a root folder containing all the necessary things. The videos folder will be the folder containing the video data you want to use. Let's say your dataset or one of the datasets we introduced like LSA64, AUTSL and WLASL. The preprocesisng folder will be automatically created by our code. The file folder2label_int.txt contains labels of glosses numbered from 0 to N-1 and N is the number of glosses you have in the data set.
 
-The process of creating the preprocessing directory will take a considerable amount of time, so here we provide you with the full Root directory of the following datasets:
+The process of creating the preprocessing directory will take a considerable amount of time, so here we provide you with the full Root directory of the following datasets:<br>
 [LSA64]()<br>
 [AUTSL]()<br>
 [WLASL100]()<br>
