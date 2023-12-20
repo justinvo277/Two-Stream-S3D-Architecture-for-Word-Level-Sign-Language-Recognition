@@ -72,8 +72,8 @@ We will need a root folder containing all the necessary things. The videos folde
 The process of creating the preprocessing directory will take a considerable amount of time, so here we provide you with the full Root directory of the following datasets:<br>
 [LSA64]()<br>
 [AUTSL]()<br>
-[WLASL100]()<br>
-[WLASL300]()<br>
+[WLASL100](https://www.kaggle.com/datasets/justinvo277/wlasl100)<br>
+[WLASL300](https://www.kaggle.com/datasets/justinvo277/wlasl300)<br>
 
 
 
