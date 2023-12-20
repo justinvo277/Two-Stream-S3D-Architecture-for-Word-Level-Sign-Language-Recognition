@@ -15,4 +15,55 @@ We tested on three different datasets including: [Large-Scale Multimodal Turkish
 
 ## Data Folder
 
+```
+Root Folder
+├── Videos
+│   ├── Gloss_1
+|   |   |──video_1.1.mp4
+|   |   |──video_1.2.mp4
+│   ├── Gloss_2
+|   |   |──video_2.1.mp4
+|   |   |──video_2.2.mp4
+├── Preprocessing
+│   ├── test
+|   |   ├──frames
+|   |   |  ├──Gloss_1
+|   |   |  |  ├──video_1.1
+|   |   |  |  |  ├──frame_1.1.0.jpg
+|   |   |  |  |  ├──frame_1.1.1.jpg
+|   |   |  ├──Gloss_2
+|   |   |  |  ├──video_2.1
+|   |   |  |  |  ├──frame_2.1.0.jpg
+|   |   |  |  |  ├──frame_2.1.1.jpg
+|   |   ├──poses
+|   |   |  ├──Gloss_1
+|   |   |  |  ├──video_1.1
+|   |   |  |  |  ├──pose_1.1.0.jpg
+|   |   |  |  |  ├──pose_1.1.1.jpg
+|   |   |  ├──Gloss_2
+|   |   |  |  ├──video_2.1
+|   |   |  |  |  ├──pose_2.1.0.jpg
+|   |   |  |  |  ├──pose_2.1.1.jpg
+│   ├── train
+|   |   ├──frames
+|   |   |  ├──Gloss_1
+|   |   |  |  ├──video_1.1
+|   |   |  |  |  ├──frame_1.1.0.jpg
+|   |   |  |  |  ├──frame_1.1.1.jpg
+|   |   |  ├──Gloss_2
+|   |   |  |  ├──video_2.1
+|   |   |  |  |  ├──frame_2.1.0.jpg
+|   |   |  |  |  ├──frame_2.1.1.jpg
+|   |   ├──poses
+|   |   |  ├──Gloss_1
+|   |   |  |  ├──video_1.1
+|   |   |  |  |  ├──pose_1.1.0.jpg
+|   |   |  |  |  ├──pose_1.1.1.jpg
+|   |   |  ├──Gloss_2
+|   |   |  |  ├──video_2.1
+|   |   |  |  |  ├──pose_2.1.0.jpg
+|   |   |  |  |  ├──pose_2.1.1.jpg
+├── folder2label_int.txt
+```
+
 

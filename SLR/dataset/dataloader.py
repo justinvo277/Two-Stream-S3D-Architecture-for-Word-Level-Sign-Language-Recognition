@@ -47,7 +47,7 @@ class VideoDataSet(torch.utils.data.Dataset):
                 item_folder = os.path.join(label_folder, label)
                 for item in os.listdir(item_folder):
                     
-                    if folder == "pose":
+                    if folder == "poses":
                         self.poses_folder.append(os.path.join(item_folder, item))
                     else:
                         self.frames_folder.append(os.path.join(item_folder, item))
@@ -288,10 +288,8 @@ def test(tensor_frames, path):
         cv.imwrite(image_name, image)
 
 if __name__ == "__main__":
-
+    print("Test")
     data = VideoDataSet(folder_root=r"E:\dataset\dataset_wlasl100", num_frames=16, data_name="WLASL100", split="train", image_size=224)
     train_loader = torch.utils.data.DataLoader(data, batch_size=2, shuffle=True, num_workers=4)
     a, b, c = next(iter(train_loader))
-    test(a[0], r"E:\rgb")
-    test(b[0], r"E:\pose")
     print(c)
