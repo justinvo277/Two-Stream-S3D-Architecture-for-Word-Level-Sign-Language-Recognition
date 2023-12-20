@@ -1,1 +1,1 @@
-# SLR_repo
+# Two Stream S3D Architecture for Word Level Sign Language Recognition
