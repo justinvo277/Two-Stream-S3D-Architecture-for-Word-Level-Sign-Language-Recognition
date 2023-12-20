@@ -8,3 +8,7 @@ This repository accompanies the paper [Two Stream S3D Architecture for Word Leve
 ## Two Stream S3D Architecture
 
 ![Architecture](images/architecture.png)
+
+## Dataset
+
+We tested on three different datasets including: [Large-Scale Multimodal Turkish Signs (AUTSL)](), [Large-Scale Dataset for Word-Level American Sign Language (WLASL)](), and [LSA64](). You can download the data now from the link we provide in this repository.
