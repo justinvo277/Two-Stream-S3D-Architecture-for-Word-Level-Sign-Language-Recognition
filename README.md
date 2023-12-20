@@ -7,4 +7,4 @@ This repository accompanies the paper [Two Stream S3D Architecture for Word Leve
 
 ## Two Stream S3D Architecture
 
-![Two Stream S3D Architecture]("images\architecture.png")
+![Two Stream S3D Architecture](images\architecture.png)
