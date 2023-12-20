@@ -15,6 +15,8 @@ We tested on three different datasets including: [Large-Scale Multimodal Turkish
 
 ## Data Folder
 
+To make it easier for you to use your custom data, we describe in detail the structure of the folder containing the data as follows:
+
 ```
 Root Folder
 ├── Videos
@@ -65,5 +67,7 @@ Root Folder
 |   |   |  |  |  ├──pose_2.1.1.jpg
 ├── folder2label_int.txt
 ```
+We will need a root folder containing all the necessary things. The videos folder will be the folder containing the video data you want to use. Let's say your dataset or one of the datasets we introduced like LSA64, AUTSL and WLASL. The preprocesisng folder will be automatically created by our code. The file folder2label_int.txt contains labels of glosses numbered from 0 to N-1 and N is the number of glosses you have in the data set.
+
 
 
